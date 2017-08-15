@@ -1,5 +1,14 @@
 import os
+import argparse
 from itertools import combinations
+
+
+def get_argparser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('filepath', type=str,
+                        help='Path to directory for searching duplicates')
+    args = parser.parse_args()
+    return args
 
 
 def get_directory_walk(filepath):
@@ -27,8 +36,10 @@ def is_duplicate_size_files(duplicates):
 
 
 if __name__ == '__main__':
-    filepath = input('Please enter filepath: ')
-    directory_walk = get_directory_walk(filepath)
+    args = get_argparser()
+    directory_walk = get_directory_walk(args.filepath)
     duplicates = get_duplicate_name_files(directory_walk)
     for file_one, file_two in duplicates:
         print('Find duplicates: %s - %s' % (file_one, file_two))
+    else:
+        print('No duplicates in current directory')
