@@ -1,6 +1,12 @@
 # Anti-Duplicator
 
-[TODO. There will be project description]
+This script gets path from the console, searches duplicates of any files in directory and all sub-directories of this path and shows it in console. 
+
+
+# Using
+
+
+
 
 # Project Goals
 
