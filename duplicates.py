@@ -21,14 +21,14 @@ def get_directory_walk(filepath):
 
 
 def get_duplicate_name_files(directory_walk):
-    duplicates = {}
+    duplicate_name_files = {}
     for file_one, file_two in combinations(directory_walk, 2):
         if os.path.basename(file_one) == os.path.basename(file_two):
-            duplicates[file_one] = file_two
-    return is_duplicate_size_files(duplicates)
+            duplicate_name_files[file_one] = file_two
+    return get_duplicate_name_and_size_files(duplicate_name_files)
 
 
-def is_duplicate_size_files(duplicates):
+def get_duplicate_name_and_size_files(duplicates):
     for file in duplicates:
         if os.path.getsize(file) != os.path.getsize(duplicates[file]):
             duplicates.popitem()
