@@ -22,7 +22,8 @@ def get_directory_walk(filepath):
 
 def get_duplicate_name_files(directory_walk):
     duplicate_name_files = {}
-    for file_one, file_two in combinations(directory_walk, 2):
+    subsequences_length = 2
+    for file_one, file_two in combinations(directory_walk, subsequences_length):
         if os.path.basename(file_one) == os.path.basename(file_two):
             duplicate_name_files[file_one] = file_two
     return get_duplicate_name_and_size_files(duplicate_name_files)
