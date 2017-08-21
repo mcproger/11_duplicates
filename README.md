@@ -5,8 +5,13 @@ This script gets path from the console, searches duplicates of any files in dire
 
 # Using
 
+```
+$ python3 duplicates.py <filepath>
 
+Find duplicates: folder/first.py - folder/folder/first.py
+Find duplicates: folder/folder/second.py - folder/folder/fold/second.py
 
+```
 
 # Project Goals
 
