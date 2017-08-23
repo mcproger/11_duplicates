@@ -1,6 +1,7 @@
 import os
 import argparse
-from itertools import combinations
+from itertools import combinations_with_replacement
+from collections import defaultdict
 
 
 def get_argparser():
@@ -20,27 +21,27 @@ def get_directory_walk(filepath):
     return directory_walk
 
 
-def get_duplicate_name_files(directory_walk):
-    duplicate_name_files = {}
+def is_duplicate_name_files(file_one, file_two):
+    return os.path.basename(file_one) == os.path.basename(file_two)
+
+
+def is_duplicate_size_files(file_one, file_two):
+    return os.path.getsize(file_one) == os.path.getsize(file_two)
+
+
+def get_duplicates(directory_walk):
+    duplicates = defaultdict(set)
     subsequences_length = 2
-    for file_one, file_two in combinations(directory_walk, subsequences_length):
-        if os.path.basename(file_one) == os.path.basename(file_two):
-            duplicate_name_files[file_one] = file_two
-    return get_duplicate_name_and_size_files(duplicate_name_files)
-
-
-def get_duplicate_name_and_size_files(duplicates):
-    for file in duplicates:
-        if os.path.getsize(file) != os.path.getsize(duplicates[file]):
-            duplicates.popitem()
-    return duplicates.items()
+    for file_one, file_two in combinations_with_replacement(directory_walk, subsequences_length):
+        if is_duplicate_name_files(file_one, file_two) and is_duplicate_size_files(file_one, file_two):
+            duplicates[os.path.basename(file_one)].add(file_two)
+    return duplicates
 
 
 if __name__ == '__main__':
     args = get_argparser()
     directory_walk = get_directory_walk(args.filepath)
-    duplicates = get_duplicate_name_files(directory_walk)
-    for file_one, file_two in duplicates:
-        print('Find duplicates: %s - %s' % (file_one, file_two))
-    else:
-        print('No duplicates in current directory')
+    duplicates = get_duplicates(directory_walk)
+    for file, duplicates in duplicates.items():
+        print('Find duplicates: File - %s, Duplicates - %s' %
+              (file, ', '.join(duplicates)))
