@@ -1,6 +1,5 @@
 import os
 import argparse
-from itertools import combinations_with_replacement
 from collections import defaultdict
 
 
@@ -21,27 +20,24 @@ def get_directory_walk(filepath):
     return directory_walk
 
 
-def is_duplicate_name_files(file_one, file_two):
-    return os.path.basename(file_one) == os.path.basename(file_two)
+def get_files_info(directory_walk):
+    files_info = defaultdict(list)
+    for file in directory_walk:
+        files_info[os.path.basename(file)].append(os.path.getsize(file))
+    return files_info
 
 
-def is_duplicate_size_files(file_one, file_two):
-    return os.path.getsize(file_one) == os.path.getsize(file_two)
-
-
-def get_duplicates(directory_walk):
-    duplicates = defaultdict(set)
-    subsequences_length = 2
-    for file_one, file_two in combinations_with_replacement(directory_walk, subsequences_length):
-        if is_duplicate_name_files(file_one, file_two) and is_duplicate_size_files(file_one, file_two):
-            duplicates[os.path.basename(file_one)].add(file_two)
+def get_duplicates(files_info):
+    duplicates = []
+    for file_info in files_info:
+        if len(files_info[file_info]) != len(set(files_info[file_info])) and len(files_info[file_info]) != 1:
+            duplicates.append(file_info)
     return duplicates
 
 
 if __name__ == '__main__':
     args = get_argparser()
     directory_walk = get_directory_walk(args.filepath)
-    duplicates = get_duplicates(directory_walk)
-    for file, duplicates in duplicates.items():
-        print('Find duplicates: File - %s, Duplicates - %s' %
-              (file, ', '.join(duplicates)))
+    files_info = get_files_info(directory_walk)
+    duplicates = get_duplicates(files_info)
+    print('This files have duplicates: %s' % (', ').join(duplicates))
